@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { v4: uuidv4 } = require("uuid");
 
-const OrderSchema = new mongoose.Schema({
+const CartSchema = new mongoose.Schema({
     _id: { type: String, default: uuidv4 },
     userId:{type:String, required:true},
     items: [
@@ -13,4 +13,4 @@ const OrderSchema = new mongoose.Schema({
     totalPrice:{type:Number, required:true}
   }, { versionKey: false });
 
-module.exports = mongoose.model("Order", OrderSchema);
+module.exports = mongoose.model("Cart", CartSchema);

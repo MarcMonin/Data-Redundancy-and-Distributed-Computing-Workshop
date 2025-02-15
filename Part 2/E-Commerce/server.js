@@ -2,7 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const productRoutes = require("./routes/products");
-const orderRoutes=require("./routes/orders")
+const orderRoutes=require("./routes/orders");
+const cartRoutes=require("./routes/carts");
 
 const app = express();
 const PORT = 5000;
@@ -27,6 +28,8 @@ app.get("/", (req, res) => {
 app.use("/products", productRoutes);
 
 app.use("/orders", orderRoutes);
+
+app.use("/cart", cartRoutes);
 
 // Start the server
 app.listen(PORT, () => {
