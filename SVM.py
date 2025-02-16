@@ -29,7 +29,7 @@ model = joblib.load("svc.pkl")
 app = Flask(__name__)
 
 #Very unsecure -> complete with your own ngrok auth token
-ngrok.set_auth_token("")
+ngrok.set_auth_token("2t8jLOfGntDqfKe9PQ3EXiiEhCV_2JEGKt9AKkFzqnJWkdgJZ")
 
 @app.route('/predict', methods=['GET'])
 def predict():

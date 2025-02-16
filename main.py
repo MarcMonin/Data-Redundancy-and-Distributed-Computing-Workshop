@@ -1,5 +1,7 @@
 import numpy as np
 from collections import defaultdict
+from flask import Flask, request, jsonify
+import joblib
 
 class ConsensusModel:
     def __init__(self, model_names, classes):
@@ -34,19 +36,43 @@ class ConsensusModel:
     def get_weights(self):
         return self.weights
 
-# Exemple d'utilisation
-model_names = ["model_A", "model_B", "model_C"]
-classes = ["class_0", "class_1", "class_2"]
+# Initialisation de Flask
+app = Flask(__name__)
+
+# Charger les modèles
+model_names = ["KNeighbors","Logisticregression","random_forest_model","svc"]
+models = {name: joblib.load(f"{name}.pkl") for name in model_names}
+classes = [0, 1]
 consensus_model = ConsensusModel(model_names, classes)
 
-# Simuler des prédictions de classification
-predictions_batch = {
-    "model_A": ["class_0", "class_1", "class_2"],
-    "model_B": ["class_0", "class_0", "class_1"],
-    "model_C": ["class_1", "class_1", "class_2"]
-}
+@app.route('/predict', methods=['GET', 'POST'])
+def predict():
+    try:
+        # Charger les données
+        data = request.json
+        X = np.array(data['X']).reshape(1, -1)
 
-consensus_model.update_predictions(predictions_batch)
-print("Consensus initial:", consensus_model.compute_consensus())
-consensus_model.update_weights()
-print("Nouveaux poids après ajustement:", consensus_model.get_weights())
+        # Faire des prédictions avec chaque modèle
+        predictions = defaultdict(int)
+        for model_name in models:
+            model = models[model_name]
+            y_pred = model.predict(X)[0]
+            predictions[model_name] = y_pred
+
+        # Mettre à jour les prédictions du consensus
+        consensus_model.update_predictions(predictions)
+
+        # Mettre à jour les poids des modèles
+        consensus_model.update_weights()
+        weights = consensus_model.get_weights()
+
+        # Calculer le consensus
+        consensus = consensus_model.compute_consensus()
+
+        return jsonify({"consensus": consensus, "weights": weights})
+
+    except Exception as e:
+        return jsonify({"error": str(e)})
+
+if __name__ == '__main__':
+    app.run(port=5001, debug=True)

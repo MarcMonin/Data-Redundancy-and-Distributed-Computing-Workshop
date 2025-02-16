@@ -19,14 +19,13 @@ model=LogisticRegression()
 model.fit(X_train,y_train)
 y_pred = model.predict(X_test)
 
-joblib.dump(model, "random_forest_model.pkl")
+joblib.dump(model, "Logisticregression.pkl")
 
-model = joblib.load("random_forest_model.pkl")
+model = joblib.load("Logisticregression.pkl")
 
 app = Flask(__name__)
-
 #Very unsecure -> complete with your auth token
-ngrok.set_auth_token("")
+ngrok.set_auth_token("2t8jLOfGntDqfKe9PQ3EXiiEhCV_2JEGKt9AKkFzqnJWkdgJZ")
 
 @app.route('/predict', methods=['GET'])
 def predict():
