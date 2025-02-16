@@ -25,7 +25,7 @@ model = joblib.load("Logisticregression.pkl")
 
 app = Flask(__name__)
 #Very unsecure -> complete with your auth token
-ngrok.set_auth_token("2t8jLOfGntDqfKe9PQ3EXiiEhCV_2JEGKt9AKkFzqnJWkdgJZ")
+ngrok.set_auth_token("")
 
 @app.route('/predict', methods=['GET'])
 def predict():
